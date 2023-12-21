@@ -97,8 +97,7 @@
 <div class="box">
     <div class="container" style="height: 300px;">
         <div class="card-body">
-            <form action="{{ route('admin.student.answer.store') }}" method="post">
-            {{csrf_field()}}
+            
                 <div class="mt-5">
                     <span>Question 1</span>
                     @foreach ($rs_questions as $question)
@@ -111,7 +110,7 @@
                         @foreach ($rs_options as $option)
                         <div class="list-group-item list-group-item-action " aria-current="true">
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" name="option_id" id="flexRadioDefault1" value="{{$option->id}}">
+                                {{-- <input class="form-check-input" type="radio" name="option_id" id="flexRadioDefault1" value="{{$option->id}}"> --}}
                                 <label class="form-check-label stretched-link" for="flexRadioDefault1">
                                     {!! $option->description !!}
                                 </label>
@@ -121,10 +120,7 @@
                     </div>
                     @endforeach
                 </div>
-                <div class="mt-5">
-                    <input type="submit" class="btn btn-success">
-                </div>
-            </form>
+                
         </div> 
     </div>
 </div>
@@ -181,12 +177,6 @@ var countDown = function (callback) {
     }, 1000, timeUp);
 };
 
-// When time elapses: submit form
-var timeUp = function () {
-    alert("Time's Up!");
-    timeExpired = true;
-    endexam()
-};
 
 // Start the clock
 countDown(timeUp);
@@ -198,16 +188,9 @@ countDown(timeUp);
 
 </script>
 <script>
-    setTimeout(function(){  
+    setTimeout(function(){ 
         location.reload();  
     },{{($max_min*60+$max_sec)*1000 + $refresh_time}});
 </script> 
 </body>
 </html>
-
-
-
-
-
-
-

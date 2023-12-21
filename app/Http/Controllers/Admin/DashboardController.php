@@ -30,7 +30,7 @@ class DashboardController extends Controller
         if ($admins->role_id == 1) {
             return view('admin/dashboard/dashboard', compact('quiz_start_time', 'refresh_timing'));
         }elseif($admins->role_id == 2) {
-            $rs_update = DB::select(DB::raw("select * from `status_master` limit 1 ;"));
+            return $rs_update = DB::select(DB::raw("select * from `status_master` limit 1 ;"));
             if ($rs_update[0]->status==2) {
                 return $this->startexam($max_time);
             }elseif ($rs_update[0]->status==3) {
@@ -88,7 +88,7 @@ class DashboardController extends Controller
 
     public function sendQuestion()
     {
-        $rs_update = DB::select(DB::raw("update `status_master` set `status` = 2  limit 1 ;"));
+        $rs_update = DB::select(DB::raw("call `up_assign_question`();"));
         return Redirect()->back()->with(['message'=>'Question Send Successfully','class'=>'success']);   
     }
 
@@ -112,62 +112,75 @@ class DashboardController extends Controller
     public function startexam($max_time)
     {  
         $user_id = Auth::guard('admin')->user()->id;
-        $rs_fetch = DB::select(DB::raw("select * from `default_value` limit 1;"));
-        $total_question = $rs_fetch[0]->total_question;
-        $max_time = $rs_fetch[0]->max_time; 
-        $second = 0;
-        $minute = $max_time;
-        $carbon = new Carbon(); 
-        $dt = Carbon::now();
-        $start_time = $dt->toDateTimeString();
-        $current_second = ($max_time * 60) - strtotime($start_time); ;
-        $minute = floor(($current_second / 60) % 60);
-        $second = $current_second % 60;
-        $rs_questions = DB::select(DB::raw("select * from `questions` where `title` = 'Indian National Flag' limit 1;"));
-        $rs_save = DB::select(DB::raw("insert into `question_master`(`user_id`, `start_time`, `total_time`, `total_question`, `total_question_id`) values($user_id, '$start_time', '$max_time', '$total_question', '');"));
-        return view('admin/dashboard/show_question',compact('rs_questions', 'max_time')); 
+        $rs_questions = DB::select(DB::raw("call `up_fetch_question`($user_id);"));
+        $max_time = $rs_questions[0]->max_time;
+        
+        $max_min = intval($max_time/60);
+        if($max_min*60 > $max_time){
+            $max_min = $max_min - 1;
+        }
+        $max_sec = $max_time - $max_min*60;
+        $is_refresh = $rs_questions[0]->page_refresh;
+
+        $refresh_time = 0;
+        if($max_time == 0){
+            $refresh_time = 2000;
+        }
+        if($is_refresh == 0){
+            return view('admin/dashboard/show_question',compact('rs_questions', 'max_min', 'max_sec', 'refresh_time'));     
+        }else{
+            return view('admin/dashboard/show_question_after_submit',compact('rs_questions', 'max_min', 'max_sec', 'refresh_time')); 
+        }
+        
         
     }
 
     public function answerStore(Request $request)
     {  
+        // return $request;
         $user_id = Auth::guard('admin')->user()->id;
         $question_no = 1;
         $question_id = $request->question_id;
         $option_id = $request->option_id;
-        $rs_fetch = DB::select(DB::raw("select * from `options` where `id` = $option_id and`question_id` = $question_id  and `is_correct_ans` = 1 limit 1;"));
-        if (count($rs_fetch) > 0) {
-            $marks = 1;    
-        }else{
-            $marks = 0;   
-        }
-        $status = 0;
-        $rs_save_ans = DB::select(DB::raw("insert into `user_question_answer`(`user_id`, `question_no`, `question_id`, `option_id`, `marks`, `status`) values($user_id, $question_no, $question_id, $option_id, $marks, $status);"));
+        // $query = "call `up_submit_answer`($user_id, $question_id, $option_id);";
+        // return $query;
+        $rs_store = DB::select(DB::raw("call `up_submit_answer`($user_id, $question_id, $option_id);"));
+        
+        // $rs_fetch = DB::select(DB::raw("select * from `options` where `id` = $option_id and`question_id` = $question_id  and `is_correct_ans` = 1 limit 1;"));
+        // if (count($rs_fetch) > 0) {
+        //     $marks = 1;    
+        // }else{
+        //     $marks = 0;   
+        // }
+        // $status = 0;
+        // $rs_save_ans = DB::select(DB::raw("insert into `user_question_answer`(`user_id`, `question_no`, `question_id`, `option_id`, `marks`, `status`) values($user_id, $question_no, $question_id, $option_id, $marks, $status);"));
 
-        $dt = Carbon::now();
-        $time = $dt->toDateTimeString();
-        $rs_update = DB::select(DB::raw("update `question_master` set `end_time` = $time where `user_id` = $user_id limit 1;")); 
+        // $dt = Carbon::now();
+        // $time = $dt->toDateTimeString();
+        // $rs_update = DB::select(DB::raw("update `question_master` set `end_time` = $time where `user_id` = $user_id limit 1;")); 
         return Redirect()->back()->with(['message'=>'Save Successfully','class'=>'success']);  
         
     }
 
     public function endexam()
     {
-        $dt = Carbon::now();
-        $time = $dt->toDateTimeString();
         $user_id = Auth::guard('admin')->user()->id;
-        $rs_update = DB::select(DB::raw("update `question_master` set `end_time` = $time where `user_id` = $user_id limit 1;"));
+        $question_id = 0;
+        $option_id = 0;
+        $rs_store = DB::select(DB::raw("call `up_submit_answer`($user_id, $question_id, $option_id);"));
         return redirect('admin/dashboard');
         
     }
     public function reviewexam()
     {
         $user_id = Auth::guard('admin')->user()->id;  
-        $QuestionMasters = QuestionMaster::where('user_id',$user_id)->first(); 
-        $array_id=explode(',',$QuestionMasters->total_question_id);
-        $questions=Question::where('title','Indian National Flag')->with('options')->find($array_id);        
+
+        $rs_fetch = DB::select(DB::raw("select * from `quiz_questions` where `user_id` = $user_id order by `id` desc limit 1;"));
+        $question_id = $rs_fetch[0]->question_id;
+        $rs_questions = DB::select(DB::raw("select `id` as `q_id`, `details` as `q_detail` from `questions` where `id` = $question_id limit 1;"));
         
-        return view('admin/dashboard/review_question',compact('questions','user_id'));
+        
+        return view('admin/dashboard/review_question',compact('rs_questions'));
     }  
 
     
