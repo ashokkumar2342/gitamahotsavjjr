@@ -148,7 +148,7 @@ class DashboardController extends Controller
         return $this->sendQuestion(); 
     }
 
-    public function rankPosition()
+    public function rankPosition($refresh_timing)
     {
         $rs_score = DB::select(DB::raw("select `usr`.`id`, `usr`.`name`, `usr`.`mobile`, `usr`.`email`, `usr`.`profile`, `scr`.`score` from `admins` `usr` inner join ( select `qq`.`user_id`, sum(`qq`.`question_score`) as `score` from `quiz_questions` `qq` group by `qq`.`user_id`) as `scr` on `scr`.`user_id` = `usr`.`id` order by `scr`.`score` desc;"));
         return view('admin/dashboard/rank_position', compact('rs_score', 'refresh_timing'));   
