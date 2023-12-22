@@ -51,7 +51,7 @@ class DashboardController extends Controller
                 $show_answer = 0;
                 return view('admin/dashboard/dashboard_2', compact('rs_questions', 'max_min', 'max_sec', 'refresh_time', 'show_answer'));   
             }elseif ($rs_update[0]->status==3) {
-                $rs_questions = DB::select(DB::raw("select `id` as `q_id`, `details` as `q_detail` from `questions` where `status` = 1 order by `id` desc limit 1;"));
+                $rs_questions = DB::select(DB::raw("select `id` as `q_id`, `details` as `q_detail` from `questions` where `status` = 2 order by `id` desc limit 1;"));
                 return view('admin/dashboard/dashboard_3', compact('rs_questions'));   
             }elseif ($rs_update[0]->status==4) {
                 return view('admin/dashboard/dashboard_4', compact('rs_questions'));   
@@ -111,25 +111,25 @@ class DashboardController extends Controller
     public function startQuiz()
     {
         $rs_update = DB::select(DB::raw("update `status_master` set `status` = 1  limit 1 ;"));
-        return Redirect()->back()->with(['message'=>'Quiz Start Successfully','class'=>'success']);   
+        return redirect('admin/dashboard');    
     }
 
     public function sendQuestion()
     {
         $rs_update = DB::select(DB::raw("call `up_assign_question`();"));
-        return Redirect()->back()->with(['message'=>'Question Send Successfully','class'=>'success']);   
+        return redirect('admin/dashboard');    
     }
 
     public function showAnswer()
     {
         $rs_update = DB::select(DB::raw("update `status_master` set `status` = 3  limit 1 ;"));
-        return Redirect()->back()->with(['message'=>'Show Answer Successfully','class'=>'success']);   
+        return redirect('admin/dashboard');  
     }
 
     public function showScoreBoard()
     {
         $rs_update = DB::select(DB::raw("update `status_master` set `status` = 4  limit 1 ;"));
-        return Redirect()->back()->with(['message'=>'Show Score Board Successfully','class'=>'success']);   
+        return redirect('admin/dashboard');    
     }
 
     public function sendNextQuestion()

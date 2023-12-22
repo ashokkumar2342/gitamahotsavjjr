@@ -8,7 +8,9 @@
             </div>
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
-                    <li class="breadcrumb-item active"><h1><strong style="color:red"><span id="timerText">--:--</span> Remaining</strong></h1></li>
+                    @if ($show_answer == 0)
+                        <li class="breadcrumb-item active"><h1><strong style="color:red"><span id="timerText">--:--</span> Remaining</strong></h1></li>
+                    @endif
                 </ol>
             </div>
         </div>
@@ -103,22 +105,19 @@
    var timeUp = function () {
        // alert("Time's Up!");
        timeExpired = true;
-       check_all_submit();
+       
 
    };
 
    // Start the clock
    countDown(timeUp);
    });
-
-   function check_all_submit(){
-        window.location.replace('{{ route('admin.check.all.submit') }}')
-    }
 </script>
 <script>
     
     setTimeout(function(){  
-        location.reload();  
+        location.reload();
+        window.location.replace('{{ route('admin.check.all.submit') }}')  
     },{{($max_min*60+$max_sec)*1000 + $refresh_time}});
     
 </script>
