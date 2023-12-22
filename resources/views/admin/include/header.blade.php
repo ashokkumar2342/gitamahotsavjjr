@@ -15,7 +15,10 @@
         @endphp
         <a class="nav-link dropdown-toggle" href="javascript:void(0)" data-toggle="dropdown"
             aria-haspopup="true" aria-expanded="false">
+            @if ($admins->role_id == 3)
+              
             <img src="{{ route('admin.profile.photo.show',Crypt::encrypt($admins->profile)) }}" alt="user" class="rounded-circle"
+            @endif
                 width="40">
             <span class="ml-2 d-none d-lg-inline-block"><span style="color:#fff">Hello : {{ Auth::guard('admin')->user()->name }}</span></span>
         </a>

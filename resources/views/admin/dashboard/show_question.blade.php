@@ -88,11 +88,9 @@
         <div class="container">
             <div class="navbar-header">
                 <a class="navbar-brand" href="#"><b style="color: #fff;">GITA MAHOTSAV JHAJJAR</b></a>
+                <a class="navbar-brand" href="#"><b style="color: #fff;padding-left: 80px;">Hello : {{ Auth::guard('admin')->user()->name }}</b></a>
             </div>
             <ul class="nav navbar-nav navbar-right">
-                {{-- <audio controls autoplay>
-                    <source src="{{ asset('quiz/audio/clock.aac') }}" type="audio/mp3">
-                </audio> --}}
                 <li><a href="#"><b style="color: #fff;"><span class="glyphicon glyphicon-time"></span> <span id="timerText">--:--</span> Remaining</a></b></li>
             </ul>
         </div>
@@ -103,7 +101,10 @@
             <form action="{{ route('admin.student.answer.store') }}" method="post">
             {{csrf_field()}}
                 <div class="mt-5">
-                    <span>Question 1</span>
+                    @php
+                        $question_no = App\Helper\MyFuncs::question_no();
+                    @endphp
+                    <span>Question No. :: {{$question_no}}</span>
                     @foreach ($rs_questions as $question)
                     @php
                         $rs_options = Illuminate\Support\Facades\DB::select(DB::raw("select * from `options` where `question_id` = $question->q_id ;"));
