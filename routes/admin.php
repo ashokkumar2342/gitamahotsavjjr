@@ -21,6 +21,9 @@ Route::group(['middleware' => 'admin'], function() {
 	Route::get('start-exam', 'DashboardController@startexam')->name('admin.start.exam');
 	Route::get('review-exam', 'DashboardController@reviewexam')->name('admin.review.exam');
 	Route::post('answer-store', 'DashboardController@answerStore')->name('admin.student.answer.store');
+	Route::get('check-all-submit', 'DashboardController@check_all_submit')->name('admin.check.all.submit');
+
+
 
 	Route::get('show-details', 'DashboardController@showStudentDetails')->name('admin.student.show.details');
 	Route::get('registration-show-details', 'DashboardController@showStudentRegistrationDetails')->name('admin.student.Registration.details');
@@ -62,50 +65,7 @@ Route::group(['middleware' => 'admin'], function() {
 	
 		
 
-        Route::group(['prefix' => 'Master'], function() {
-        	//-states-//
-    	    Route::get('/', 'MasterController@index')->name('admin.Master.index');	   
-    	    Route::post('Store/{id?}', 'MasterController@store')->name('admin.Master.store');	   
-    	    Route::get('Edit{id}', 'MasterController@edit')->name('admin.Master.edit');
-    	    Route::get('Delete{id}', 'MasterController@delete')->name('admin.Master.delete');
-            //-districts-//
-    	    Route::get('Districts', 'MasterController@districts')->name('admin.Master.districts');	   
-    	    Route::post('Districts-Store{id?}', 'MasterController@districtsStore')->name('admin.Master.districtsStore');	   
-    	    Route::get('DistrictsTable', 'MasterController@DistrictsTable')->name('admin.Master.DistrictsTable');
-    	    Route::get('Districts-Edit/{id}', 'MasterController@districtsEdit')->name('admin.Master.districtsEdit');
-    	    Route::get('Districts-delete/{id}', 'MasterController@districtsDelete')->name('admin.Master.districtsDelete');
-    	   
-    	    Route::get('BlockMCS', 'MasterController@BlockMCS')->name('admin.Master.blockmcs');  
-    	    Route::post('BlockMCSStore{id?}', 'MasterController@BlockMCSStore')->name('admin.Master.BlockMCSStore');	   
-    	    Route::get('BlockMCSEdit/{id}', 'MasterController@BlockMCSEdit')->name('admin.Master.BlockMCSEdit');
-    	    Route::get('BlockMCSTable', 'MasterController@BlockMCSTable')->name('admin.Master.BlockMCSTable');
-    	    Route::get('BlockMCSDelete/{id}', 'MasterController@BlockMCSDelete')->name('admin.Master.BlockMCSDelete');
-    	    	 
-    	    //-----------------onchange-----------------------------//
-    	    Route::get('stateWiseDistrict', 'MasterController@stateWiseDistrict')->name('admin.Master.stateWiseDistrict');   
-    	    
-
-    	    Route::get('DistrictWiseBlock/{print_condition?}', 'MasterController@DistrictWiseBlock')->name('admin.Master.DistrictWiseBlock');
-    	     
-
-
-    	   
-    	     
-    	});
-
-	Route::group(['prefix' => 'booking'], function() {
-	    Route::get('demo-request-list', 'BookingController@demoRequestList')->name('admin.booking.demo.request.list');	   
-	    Route::post('demo-request-list-show', 'BookingController@demoRequestListShow')->name('admin.booking.demo.request.list.show');	   
-	    Route::get('demo-assign/{booking_id}', 'BookingController@demoAssign')->name('admin.booking.demo.assign');	   
-	    Route::get('demo-assign-save/{booking_id}/{user_id}', 'BookingController@demoAssignSave')->name('admin.booking.demo.assign.save');	   
-	});
-
-	Route::group(['prefix' => 'support'], function() {
-	    Route::get('index', 'SupportController@index')->name('admin.support.index');  
-	    Route::post('show', 'SupportController@show')->name('admin.support.show');  
-	    Route::get('screenshot/{id?}', 'SupportController@screenshot')->name('admin.support.screenshot');  
-	    Route::get('resolved/{id?}', 'SupportController@Resolved')->name('admin.support.Resolved');  
-	});
+        
 	
 
     

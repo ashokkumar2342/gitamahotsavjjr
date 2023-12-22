@@ -44,12 +44,11 @@
                             </div>
                         </div>
                     </div>
-                    
-                    <div class="col-lg-12">
-                        <a href="{{ route('admin.show.answer') }}" title=""><button type="" class="btn btn-success">Show Answer</button></a>
-                    </div>
-                    
-                    
+                    @if ($show_answer == 1)
+                        <div class="col-lg-12">
+                            <a href="{{ route('admin.show.answer') }}" title=""><button type="" class="btn btn-success">Show Answer</button></a>
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>
@@ -104,14 +103,17 @@
    var timeUp = function () {
        // alert("Time's Up!");
        timeExpired = true;
-       
+       check_all_submit();
+
    };
 
    // Start the clock
-   countDown();
+   countDown(timeUp);
    });
 
-    
+   function check_all_submit(){
+        window.location.replace('{{ route('admin.check.all.submit') }}')
+    }
 </script>
 <script>
     

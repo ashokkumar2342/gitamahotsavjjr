@@ -48,7 +48,8 @@ class DashboardController extends Controller
                 if($max_time == 0){
                     $refresh_time = 2000;
                 }
-                return view('admin/dashboard/dashboard_2', compact('rs_questions', 'max_min', 'max_sec', 'refresh_time', 'show_ans_status'));   
+                $show_answer = 0;
+                return view('admin/dashboard/dashboard_2', compact('rs_questions', 'max_min', 'max_sec', 'refresh_time', 'show_answer'));   
             }elseif ($rs_update[0]->status==3) {
                 $rs_questions = DB::select(DB::raw("select `id` as `q_id`, `details` as `q_detail` from `questions` where `status` = 1 order by `id` desc limit 1;"));
                 return view('admin/dashboard/dashboard_3', compact('rs_questions'));   
@@ -213,6 +214,23 @@ class DashboardController extends Controller
         
         
         return view('admin/dashboard/review_question',compact('rs_questions', 'user_id'));
+    }  
+
+    public function check_all_submit()
+    {
+        $user_id = Auth::guard('admin')->user()->id;  
+        
+        $rs_fetch = DB::select(DB::raw("call `up_check_for_all_user_submit`();"));
+        $show_answer = $rs_fetch[0]->submit_status;
+        if($show_answer == 0){
+            $rs_questions = DB::select(DB::raw("select `id` as `q_id`, `details` as `q_detail` from `questions` where `status` = 1 order by `id` desc limit 1;"));    
+        }else{
+            $rs_questions = DB::select(DB::raw("select `id` as `q_id`, `details` as `q_detail` from `questions` where `status` = 2 order by `id` desc limit 1;"));
+        }
+        $max_min = 0;
+        $max_sec = 0;
+        $refresh_time = 2000;
+        return view('admin/dashboard/dashboard_2', compact('rs_questions', 'max_min', 'max_sec', 'refresh_time', 'show_answer'));
     }  
 
     
