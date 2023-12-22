@@ -90,6 +90,9 @@
                 <a class="navbar-brand" href="#"><b style="color: #fff;">GITA MAHOTSAV JHAJJAR</b></a>
             </div>
             <ul class="nav navbar-nav navbar-right">
+                <audio controls autoplay>
+                    <source src="{{ asset('quiz/audio/clock.aac') }}" type="audio/mp3">
+                </audio>
                 <li><a href="#"><b style="color: #fff;"><span class="glyphicon glyphicon-time"></span> <span id="timerText">--:--</span> Remaining</a></b></li>
             </ul>
         </div>
@@ -201,6 +204,11 @@ countDown(timeUp);
     setTimeout(function(){  
         location.reload();  
     },{{($max_min*60+$max_sec)*1000 + $refresh_time}});
+</script>
+<script>
+    setTimeout(function() {
+                document.querySelector('audio').pause();
+            }, 60000);
 </script> 
 </body>
 </html>

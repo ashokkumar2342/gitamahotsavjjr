@@ -108,7 +108,19 @@
                     <input type="hidden" name="question_id" value="{{$question->q_id}}">
                     <div class="list-group">
                         @foreach ($rs_options as $option)
-                        <div class="list-group-item list-group-item-action " aria-current="true">
+                            @php
+                                $rs_fetch = DB::select(DB::raw("select * from `quiz_questions` where `user_id` = $user_id order by `id` desc limit 1;"));
+                                if ($option->is_correct_ans == 1) {
+                                    $color = 'green';
+                                }elseif($rs_fetch[0]->given_answer == $option->id && $option->is_correct_ans == 1){
+                                    $color = 'green';
+                                }elseif($rs_fetch[0]->given_answer == $option->id){
+                                    $color = 'red';
+                                }else{
+                                    $color = '';
+                                }
+                            @endphp
+                        <div class="list-group-item list-group-item-action " aria-current="true" style="background-color:{{$color}}">
                             <div class="form-check">
                                 {{-- <input class="form-check-input" type="radio" name="option_id" id="flexRadioDefault1" value="{{$option->id}}"> --}}
                                 <label class="form-check-label stretched-link" for="flexRadioDefault1">
@@ -136,9 +148,9 @@
 <script src={!! asset('admin_asset/dist/js/summernote.js?ver=1') !!}></script>
 
 <script>
-    setTimeout(function(){ 
+    setTimeout(function(){  
         location.reload();  
-    },{{(5000}});
+    },5000);
 </script> 
 </body>
 </html>

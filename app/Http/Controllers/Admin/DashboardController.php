@@ -28,9 +28,17 @@ class DashboardController extends Controller
         $quiz_start_time = $rs_fetch[0]->quiz_start_time;              
         $max_time = $rs_fetch[0]->max_time;
         if ($admins->role_id == 1) {
-            return view('admin/dashboard/dashboard', compact('quiz_start_time', 'refresh_timing'));
+            // $rs_update = DB::select(DB::raw("select * from `status_master` limit 1 ;"));
+            // if ($rs_update[0]->status==2) {
+            //     $rs_fetch = DB::select(DB::raw("select * from `quiz_questions` order by `id` desc limit 1;"));
+            //     $question_id = $rs_fetch[0]->question_id;
+            //     $rs_questions = DB::select(DB::raw("select `id` as `q_id`, `details` as `q_detail` from `questions` where `id` = $question_id limit 1;"));
+            // }
+            $check_for_ans = DB::select(DB::raw("call `up_check_for_all_user_submit`();"));
+            $show_ans_status = $check_for_ans[0]->submit_status;
+            return view('admin/dashboard/dashboard', compact('quiz_start_time', 'refresh_timing', 'rs_questions', 'show_ans_status'));
         }elseif($admins->role_id == 2) {
-            return $rs_update = DB::select(DB::raw("select * from `status_master` limit 1 ;"));
+            $rs_update = DB::select(DB::raw("select * from `status_master` limit 1 ;"));
             if ($rs_update[0]->status==2) {
                 return $this->startexam($max_time);
             }elseif ($rs_update[0]->status==3) {
@@ -180,7 +188,7 @@ class DashboardController extends Controller
         $rs_questions = DB::select(DB::raw("select `id` as `q_id`, `details` as `q_detail` from `questions` where `id` = $question_id limit 1;"));
         
         
-        return view('admin/dashboard/review_question',compact('rs_questions'));
+        return view('admin/dashboard/review_question',compact('rs_questions', 'user_id'));
     }  
 
     
