@@ -24,7 +24,7 @@
                     <div class="col-lg-12">
                         <div class="card-body">
                             <div class="mt-5">
-                                <span>Question 1</span>
+                                <span>Question No.:: {{$question_no}}</span>
                                 @foreach ($rs_questions as $question)
                                 @php
                                     $rs_options = Illuminate\Support\Facades\DB::select(DB::raw("select * from `options` where `question_id` = $question->q_id ;"));

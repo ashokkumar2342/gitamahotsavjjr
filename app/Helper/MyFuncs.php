@@ -18,6 +18,14 @@ class MyFuncs {
   }
 
 
+  public static function question_no(){ 
+    $rs_fetch = DB::select(DB::raw("select * from `default_value` limit 1;"));
+    $question_no = $rs_fetch[0]->question_no;
+
+    return $question_no;
+  }
+
+
   public static function mainMenu($menu_type_id){ 
     $user_rs=Auth::guard('admin')->user();  
     $user_role = $user_rs->role_id;

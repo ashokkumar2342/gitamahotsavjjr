@@ -49,12 +49,23 @@ class DashboardController extends Controller
                     $refresh_time = 2000;
                 }
                 $show_answer = 0;
-                return view('admin/dashboard/dashboard_2', compact('rs_questions', 'max_min', 'max_sec', 'refresh_time', 'show_answer'));   
+                $question_no = $rs_fetch[0]->question_no;
+                return view('admin/dashboard/dashboard_2', compact('rs_questions', 'max_min', 'max_sec', 'refresh_time', 'show_answer', 'question_no'));   
             }elseif ($rs_update[0]->status==3) {
+                $rs_fetch = DB::select(DB::raw("select * from `default_value` limit 1;"));
+                $question_no = $rs_fetch[0]->question_no;
                 $rs_questions = DB::select(DB::raw("select `id` as `q_id`, `details` as `q_detail` from `questions` where `status` = 2 order by `id` desc limit 1;"));
-                return view('admin/dashboard/dashboard_3', compact('rs_questions'));   
+                return view('admin/dashboard/dashboard_3', compact('rs_questions', 'question_no'));   
             }elseif ($rs_update[0]->status==4) {
-                return view('admin/dashboard/dashboard_4', compact('rs_questions'));   
+                $rs_fetch = DB::select(DB::raw("select * from `default_value` limit 1;"));
+                $question_no = $rs_fetch[0]->question_no;
+                $total_question = $rs_fetch[0]->total_question;
+                $rs_score = DB::select(DB::raw("select `usr`.`id`, `usr`.`name`, `usr`.`mobile`, `usr`.`email`, `usr`.`profile`, `scr`.`score` from `admins` `usr` inner join ( select `qq`.`user_id`, sum(`qq`.`question_score`) as `score` from `quiz_questions` `qq` group by `qq`.`user_id`) as `scr` on `scr`.`user_id` = `usr`.`id` order by `scr`.`score` desc;"));
+                $end_quiz = 0;
+                if($question_no == $total_question){
+                    $end_quiz = 1;
+                }
+                return view('admin/dashboard/dashboard_4', compact('rs_score', 'end_quiz'));   
             }
             
         }elseif($admins->role_id == 2) {
@@ -134,7 +145,7 @@ class DashboardController extends Controller
 
     public function sendNextQuestion()
     {
-        return 'ok';   
+        return $this->sendQuestion(); 
     }
 
     public function rankPosition()
@@ -219,6 +230,8 @@ class DashboardController extends Controller
     public function check_all_submit()
     {
         $user_id = Auth::guard('admin')->user()->id;  
+        $rs_fetch = DB::select(DB::raw("select * from `default_value` limit 1;"));
+        $question_no = $rs_fetch[0]->question_no;
         
         $rs_fetch = DB::select(DB::raw("call `up_check_for_all_user_submit`();"));
         $show_answer = $rs_fetch[0]->submit_status;
@@ -230,7 +243,7 @@ class DashboardController extends Controller
         $max_min = 0;
         $max_sec = 0;
         $refresh_time = 2000;
-        return view('admin/dashboard/dashboard_2', compact('rs_questions', 'max_min', 'max_sec', 'refresh_time', 'show_answer'));
+        return view('admin/dashboard/dashboard_2', compact('rs_questions', 'max_min', 'max_sec', 'refresh_time', 'show_answer', 'question_no'));
     }  
 
     

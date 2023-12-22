@@ -16,97 +16,83 @@
 <section class="content">
     <div class="container-fluid">
         <div class="row">
-            <div class="col-lg-4">
-                <div class="col-lg-12 text-center">
-                    <label style="color:green;">First Rank</label>   
-                </div>
-                @php
-                $admins = Auth::guard('admin')->user();
-                @endphp
-                <div class="card card-success card-outline">
-                    <div class="card-body box-profile">
-                        <div class="text-center">
-                            <img class="profile-user-img img-fluid img-circle" src="{{ route('admin.profile.photo.show',Crypt::encrypt($admins->profile)) }}" alt="User profile picture">
+            @if (count($rs_score)>0)
+                <div class="col-lg-4">
+                    <div class="col-lg-12 text-center">
+                        <label style="color:green;">First Rank</label>   
+                    </div>
+                    <div class="card card-success card-outline">
+                        <div class="card-body box-profile">
+                            <div class="text-center">
+                                <img class="profile-user-img img-fluid img-circle" src="{{ route('admin.profile.photo.show',Crypt::encrypt($rs_score[0]->profile)) }}" alt="User profile picture">
+                            </div>
+                            <h3 class="profile-username text-center">{{$rs_score[0]->name}}</h3>
+                            <p class="text-muted text-center">{{$rs_score[0]->mobile}}</p>
+                            <ul class="list-group list-group-unbordered mb-3">
+                                <li class="list-group-item">
+                                    <b>Total Score</b> <a class="float-right">{{$rs_score[0]->score}}</a>
+                                </li>
+                            </ul>
                         </div>
-                        <h3 class="profile-username text-center">Nina Mcintire</h3>
-                        <p class="text-muted text-center">Software Engineer</p>
-                        <ul class="list-group list-group-unbordered mb-3">
-                            <li class="list-group-item">
-                                <b>Total Question</b> <a class="float-right">1,322</a>
-                            </li>
-                            <li class="list-group-item">
-                                <b>Correct Question</b> <a class="float-right">543</a>
-                            </li>
-                            <li class="list-group-item">
-                                <b>Rank Position</b> <a class="float-right">13,287</a>
-                            </li>
-                        </ul>
                     </div>
                 </div>
-            </div>
-            <div class="col-lg-4">
-                <div class="col-lg-12 text-center">
-                    <label style="color:#ffc107;">Second Rank</label>   
-                </div>
-                @php
-                $admins = Auth::guard('admin')->user();
-                @endphp
-                <div class="card card-warning card-outline">
-                    <div class="card-body box-profile">
-                        <div class="text-center">
-                            <img class="profile-user-img img-fluid img-circle" src="{{ route('admin.profile.photo.show',Crypt::encrypt($admins->profile)) }}" alt="User profile picture">
+            @endif
+                
+            @if (count($rs_score)>1)
+                <div class="col-lg-4">
+                    <div class="col-lg-12 text-center">
+                        <label style="color:green;">Second Rank</label>   
+                    </div>
+                    <div class="card card-success card-outline">
+                        <div class="card-body box-profile">
+                            <div class="text-center">
+                                <img class="profile-user-img img-fluid img-circle" src="{{ route('admin.profile.photo.show',Crypt::encrypt($rs_score[1]->profile)) }}" alt="User profile picture">
+                            </div>
+                            <h3 class="profile-username text-center">{{$rs_score[1]->name}}</h3>
+                            <p class="text-muted text-center">{{$rs_score[1]->mobile}}</p>
+                            <ul class="list-group list-group-unbordered mb-3">
+                                <li class="list-group-item">
+                                    <b>Total Score</b> <a class="float-right">{{$rs_score[1]->score}}</a>
+                                </li>
+                            </ul>
                         </div>
-                        <h3 class="profile-username text-center">Nina Mcintire</h3>
-                        <p class="text-muted text-center">Software Engineer</p>
-                        <ul class="list-group list-group-unbordered mb-3">
-                            <li class="list-group-item">
-                                <b>Total Question</b> <a class="float-right">1,322</a>
-                            </li>
-                            <li class="list-group-item">
-                                <b>Correct Question</b> <a class="float-right">543</a>
-                            </li>
-                            <li class="list-group-item">
-                                <b>Rank Position</b> <a class="float-right">13,287</a>
-                            </li>
-                        </ul>
                     </div>
                 </div>
-            </div>
-            <div class="col-lg-4">
-                <div class="col-lg-12 text-center">
-                    <label style="color:Red">Third Rank</label>   
-                </div>
-                @php
-                $admins = Auth::guard('admin')->user();
-                @endphp
-                <div class="card card-danger card-outline">
-                    <div class="card-body box-profile">
-                        <div class="text-center">
-                            <img class="profile-user-img img-fluid img-circle" src="{{ route('admin.profile.photo.show',Crypt::encrypt($admins->profile)) }}" alt="User profile picture">
+            @endif
+                
+            @if (count($rs_score)>2)
+                <div class="col-lg-4">
+                    <div class="col-lg-12 text-center">
+                        <label style="color:green;">Third Rank</label>   
+                    </div>
+                    <div class="card card-success card-outline">
+                        <div class="card-body box-profile">
+                            <div class="text-center">
+                                <img class="profile-user-img img-fluid img-circle" src="{{ route('admin.profile.photo.show',Crypt::encrypt($rs_score[2]->profile)) }}" alt="User profile picture">
+                            </div>
+                            <h3 class="profile-username text-center">{{$rs_score[2]->name}}</h3>
+                            <p class="text-muted text-center">{{$rs_score[2]->mobile}}</p>
+                            <ul class="list-group list-group-unbordered mb-3">
+                                <li class="list-group-item">
+                                    <b>Total Score</b> <a class="float-right">{{$rs_score[2]->score}}</a>
+                                </li>
+                            </ul>
                         </div>
-                        <h3 class="profile-username text-center">Nina Mcintire</h3>
-                        <p class="text-muted text-center">Software Engineer</p>
-                        <ul class="list-group list-group-unbordered mb-3">
-                            <li class="list-group-item">
-                                <b>Total Question</b> <a class="float-right">1,322</a>
-                            </li>
-                            <li class="list-group-item">
-                                <b>Correct Question</b> <a class="float-right">543</a>
-                            </li>
-                            <li class="list-group-item">
-                                <b>Rank Position</b> <a class="float-right">13,287</a>
-                            </li>
-                        </ul>
                     </div>
                 </div>
-            </div>
+            @endif
         </div>
         <div class="row">
-            <div class="col-lg-12">
+            @if ($end_quiz == 0)
                 <div class="col-lg-12">
                     <a href="{{ route('admin.send.next.question') }}" title=""><button type="" class="btn btn-success">Send Next Question</button></a>
+                </div>            
+            @else
+                <div class="col-lg-12">
+                    <a href="{{ route('admin.send.next.question') }}" title=""><button type="" class="btn btn-success">End Quiz</button></a>
                 </div>
-            </div>            
+            @endif
+                
         </div>
     </div>
 </section>
