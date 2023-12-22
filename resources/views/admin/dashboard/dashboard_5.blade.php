@@ -82,18 +82,7 @@
                 </div>
             @endif
         </div>
-        <div class="row">
-            @if ($end_quiz == 0)
-                <div class="col-lg-12">
-                    <a href="{{ route('admin.send.next.question') }}" title=""><button type="" class="btn btn-success">Send Next Question</button></a>
-                </div>            
-            @else
-                <div class="col-lg-12">
-                    <a href="{{ route('admin.end.quiz') }}" title=""><button type="" class="btn btn-success">End Quiz</button></a>
-                </div>
-            @endif
-                
-        </div>
+        
     </div>
 </section>
 

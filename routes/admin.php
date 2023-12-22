@@ -18,10 +18,13 @@ Route::group(['middleware' => 'admin'], function() {
 	Route::get('show-answer', 'DashboardController@showAnswer')->name('admin.show.answer');
 	Route::get('show-score-board', 'DashboardController@showScoreBoard')->name('admin.show.score.board');
 	Route::get('send-next-question', 'DashboardController@sendNextQuestion')->name('admin.send.next.question');
+	Route::get('endquiz', 'DashboardController@endquiz')->name('admin.end.quiz');
 	Route::get('start-exam', 'DashboardController@startexam')->name('admin.start.exam');
 	Route::get('review-exam', 'DashboardController@reviewexam')->name('admin.review.exam');
 	Route::post('answer-store', 'DashboardController@answerStore')->name('admin.student.answer.store');
 	Route::get('check-all-submit', 'DashboardController@check_all_submit')->name('admin.check.all.submit');
+	Route::get('end-exam', 'DashboardController@endexam')->name('admin.end.exam');
+	Route::get('profile-show/{profile_pic}', 'DashboardController@proFilePhotoShow')->name('admin.profile.photo.show'); 
 
 
 
@@ -33,7 +36,6 @@ Route::group(['middleware' => 'admin'], function() {
 	Route::get('token', 'DashboardController@passportTokenCreate')->name('admin.token');
 	Route::get('profile', 'DashboardController@proFile')->name('admin.profile');
 	Route::get('profile-show', 'DashboardController@proFileShow')->name('admin.profile.show');
-	Route::get('profile-show/{profile_pic}', 'DashboardController@proFilePhotoShow')->name('admin.profile.photo.show'); 
 	Route::post('profile-update', 'DashboardController@profileUpdate')->name('admin.profile.update');
 	
 	Route::post('password-change', 'DashboardController@passwordChange')->name('admin.password.change');
@@ -41,7 +43,6 @@ Route::group(['middleware' => 'admin'], function() {
 	Route::post('upload-photo', 'DashboardController@profilePhotoUpload')->name('admin.profile.photo.upload');
 	Route::get('photo-refrash', 'DashboardController@profilePhotoRefrash')->name('admin.profile.photo.refrash');
 	
-	Route::get('end-exam', 'DashboardController@endexam')->name('admin.end.exam');
 
 	Route::prefix('account')->group(function () {
 	    Route::get('form', 'AccountController@form')->name('admin.account.form');

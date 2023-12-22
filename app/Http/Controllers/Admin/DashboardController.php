@@ -66,6 +66,13 @@ class DashboardController extends Controller
                     $end_quiz = 1;
                 }
                 return view('admin/dashboard/dashboard_4', compact('rs_score', 'end_quiz'));   
+            }elseif ($rs_update[0]->status==5) {
+                $rs_fetch = DB::select(DB::raw("select * from `default_value` limit 1;"));
+                $question_no = $rs_fetch[0]->question_no;
+                $total_question = $rs_fetch[0]->total_question;
+                $rs_score = DB::select(DB::raw("select `usr`.`id`, `usr`.`name`, `usr`.`mobile`, `usr`.`email`, `usr`.`profile`, `scr`.`score` from `admins` `usr` inner join ( select `qq`.`user_id`, sum(`qq`.`question_score`) as `score` from `quiz_questions` `qq` group by `qq`.`user_id`) as `scr` on `scr`.`user_id` = `usr`.`id` order by `scr`.`score` desc;"));
+                
+                return view('admin/dashboard/dashboard_5', compact('rs_score'));   
             }
             
         }elseif($admins->role_id == 2) {
@@ -76,6 +83,8 @@ class DashboardController extends Controller
                 return $this->reviewexam();
             }elseif ($rs_update[0]->status==4) {
                 return $this->rankPosition($refresh_timing);
+            }elseif ($rs_update[0]->status==5) {
+                return $this->rankPositionEndQuiz();
             }else{    
                 return view('admin/dashboard/score_board_dashboard',compact('admins', 'quiz_start_time', 'refresh_timing'));
             }
@@ -87,6 +96,8 @@ class DashboardController extends Controller
                 return $this->reviewexam();
             }elseif ($rs_update[0]->status==4) {
                 return $this->rankPosition($refresh_timing);
+            }elseif ($rs_update[0]->status==5) {
+                return $this->rankPositionEndQuiz();
             }else{    
                 return view('admin/dashboard/public_dashboard',compact('admins', 'quiz_start_time', 'refresh_timing'));
             }
@@ -151,7 +162,19 @@ class DashboardController extends Controller
     public function rankPosition($refresh_timing)
     {
         $rs_score = DB::select(DB::raw("select `usr`.`id`, `usr`.`name`, `usr`.`mobile`, `usr`.`email`, `usr`.`profile`, `scr`.`score` from `admins` `usr` inner join ( select `qq`.`user_id`, sum(`qq`.`question_score`) as `score` from `quiz_questions` `qq` group by `qq`.`user_id`) as `scr` on `scr`.`user_id` = `usr`.`id` order by `scr`.`score` desc;"));
-        return view('admin/dashboard/rank_position', compact('rs_score', 'refresh_timing'));   
+        return view('admin/dashboard/public_rank_position', compact('rs_score', 'refresh_timing'));   
+    }
+
+    public function rankPositionEndQuiz()
+    {
+        $rs_score = DB::select(DB::raw("select `usr`.`id`, `usr`.`name`, `usr`.`mobile`, `usr`.`email`, `usr`.`profile`, `scr`.`score` from `admins` `usr` inner join ( select `qq`.`user_id`, sum(`qq`.`question_score`) as `score` from `quiz_questions` `qq` group by `qq`.`user_id`) as `scr` on `scr`.`user_id` = `usr`.`id` order by `scr`.`score` desc;"));
+        return view('admin/dashboard/public_rank_position_end_quiz', compact('rs_score'));   
+    }
+
+    public function endquiz()
+    {
+        $rs_update = DB::select(DB::raw("update `status_master` set `status` = 5  limit 1 ;"));
+        return redirect('admin/dashboard');  
     }  
 
     public function startexam()
