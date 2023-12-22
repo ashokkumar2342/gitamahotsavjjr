@@ -24,23 +24,42 @@ class DashboardController extends Controller
     {  
         $admins=Auth::guard('admin')->user();
         $rs_fetch = DB::select(DB::raw("select * from `default_value` limit 1;"));
-        $refresh_timing = $rs_fetch[0]->refresh_timing;
         $quiz_start_time = $rs_fetch[0]->quiz_start_time;              
-        $max_time = $rs_fetch[0]->max_time;
+        $refresh_timing = $rs_fetch[0]->refresh_timing;
         if ($admins->role_id == 1) {
-            // $rs_update = DB::select(DB::raw("select * from `status_master` limit 1 ;"));
-            // if ($rs_update[0]->status==2) {
-            //     $rs_fetch = DB::select(DB::raw("select * from `quiz_questions` order by `id` desc limit 1;"));
-            //     $question_id = $rs_fetch[0]->question_id;
-            //     $rs_questions = DB::select(DB::raw("select `id` as `q_id`, `details` as `q_detail` from `questions` where `id` = $question_id limit 1;"));
-            // }
-            $check_for_ans = DB::select(DB::raw("call `up_check_for_all_user_submit`();"));
-            $show_ans_status = $check_for_ans[0]->submit_status;
-            return view('admin/dashboard/dashboard', compact('quiz_start_time', 'refresh_timing', 'rs_questions', 'show_ans_status'));
+            $rs_update = DB::select(DB::raw("select * from `status_master` limit 1 ;"));
+            if ($rs_update[0]->status==0) {
+                return view('admin/dashboard/dashboard', compact('quiz_start_time'));   
+            }elseif ($rs_update[0]->status==1) {
+                return view('admin/dashboard/dashboard_1');   
+            }elseif ($rs_update[0]->status==2) {
+                $rs_questions = DB::select(DB::raw("select `id` as `q_id`, `details` as `q_detail` from `questions` where `status` = 1 order by `id` desc limit 1;"));
+                $rs_fetch = DB::select(DB::raw("select * from `default_value` limit 1;"));
+                $max_time = $rs_fetch[0]->max_time;
+                
+                $max_min = intval($max_time/60);
+                if($max_min*60 > $max_time){
+                    $max_min = $max_min - 1;
+                }
+                $max_sec = $max_time - $max_min*60;
+                $is_refresh = 1;
+
+                $refresh_time = 0;
+                if($max_time == 0){
+                    $refresh_time = 2000;
+                }
+                return view('admin/dashboard/dashboard_2', compact('rs_questions', 'max_min', 'max_sec', 'refresh_time', 'show_ans_status'));   
+            }elseif ($rs_update[0]->status==3) {
+                $rs_questions = DB::select(DB::raw("select `id` as `q_id`, `details` as `q_detail` from `questions` where `status` = 1 order by `id` desc limit 1;"));
+                return view('admin/dashboard/dashboard_3', compact('rs_questions'));   
+            }elseif ($rs_update[0]->status==4) {
+                return view('admin/dashboard/dashboard_4', compact('rs_questions'));   
+            }
+            
         }elseif($admins->role_id == 2) {
             $rs_update = DB::select(DB::raw("select * from `status_master` limit 1 ;"));
             if ($rs_update[0]->status==2) {
-                return $this->startexam($max_time);
+                return $this->startexam();
             }elseif ($rs_update[0]->status==3) {
                 return $this->reviewexam();
             }elseif ($rs_update[0]->status==4) {
@@ -51,7 +70,7 @@ class DashboardController extends Controller
         }elseif($admins->role_id == 3){
             $rs_update = DB::select(DB::raw("select * from `status_master` limit 1 ;"));
             if ($rs_update[0]->status==2) {
-                return $this->startexam($max_time);
+                return $this->startexam();
             }elseif ($rs_update[0]->status==3) {
                 return $this->reviewexam();
             }elseif ($rs_update[0]->status==4) {
@@ -112,12 +131,17 @@ class DashboardController extends Controller
         return Redirect()->back()->with(['message'=>'Show Score Board Successfully','class'=>'success']);   
     }
 
+    public function sendNextQuestion()
+    {
+        return 'ok';   
+    }
+
     public function rankPosition()
     {
         return view('admin/dashboard/rank_position');   
     }  
 
-    public function startexam($max_time)
+    public function startexam()
     {  
         $user_id = Auth::guard('admin')->user()->id;
         $rs_questions = DB::select(DB::raw("call `up_fetch_question`($user_id);"));

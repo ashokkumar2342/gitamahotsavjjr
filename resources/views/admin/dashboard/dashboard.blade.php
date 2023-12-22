@@ -20,46 +20,10 @@
             <div class="card-body">
                 <div class="row">
                     <div class="col-lg-12">
-                        @php
-                            $rs_update = DB::select(DB::raw("select * from `status_master` limit 1;"));
-                        @endphp
-                        @if ($rs_update[0]->status == 0)
-                            <a  href="{{ route('admin.start.quiz') }}" title=""><button type="" class="btn btn-success" id="start_quiz">Start Quiz</button></a>
-                        @elseif($rs_update[0]->status == 1)
-                            <a href="{{ route('admin.send.question') }}" title=""><button type="" class="btn btn-success">Send Question</button></a>
-                        @elseif($rs_update[0]->status == 2)
-                            {{-- <div class="card-body">
-                                <div class="mt-5">
-                                    <span>Question 1</span>
-                                    @foreach ($rs_questions as $question)
-                                    @php
-                                        $rs_options = Illuminate\Support\Facades\DB::select(DB::raw("select * from `options` where `question_id` = $question->q_id ;"));
-                                    @endphp
-                                    <h3 class="mb-3 mt-1">{!! $question->q_detail !!}</h3>
-                                    <input type="hidden" name="question_id" value="{{$question->q_id}}">
-                                    <div class="list-group">
-                                        @foreach ($rs_options as $option)
-                                        <div class="list-group-item list-group-item-action " aria-current="true">
-                                            <div class="form-check">
-                                                <label class="form-check-label stretched-link" for="flexRadioDefault1">
-                                                    {!! $option->description !!}
-                                                </label>
-                                            </div>
-                                        </div>
-                                        @endforeach
-                                    </div>
-                                    @endforeach
-                                </div>
-                            </div> --}}
-                            @if ($show_ans_status == 1)
-                                <a href="{{ route('admin.show.answer') }}" title=""><button type="" class="btn btn-success">Show Answer</button></a>
-                            @endif
-                        @elseif($rs_update[0]->status == 3)
-                            <a href="{{ route('admin.show.score.board') }}" title=""><button type="" class="btn btn-success">Show Score Board</button></a>
-                        @elseif($rs_update[0]->status == 4)
-                            <a href="#" title=""><button type="" class="btn btn-success">End Quiz</button></a>
-                        @endif
-                         
+                        @include('admin.dashboard.rules_regulation')
+                    </div>
+                    <div class="col-lg-12">
+                        <a  href="{{ route('admin.start.quiz') }}" title=""><button type="" class="btn btn-success" id="start_quiz">Start Quiz</button></a>
                     </div>
                 </div>
             </div>
@@ -104,25 +68,5 @@
                 },5000000);
             }
         }
-    </script>
-
-    <script>
-        // function playAudioWithSettings(source, duration) {
-        //     var audioPlayer = new Audio(source);
-
-        //     // Play the audio
-        //     audioPlayer.play();
-
-        //     // Stop the audio after the specified duration
-        //     setTimeout(function() {
-        //         audioPlayer.pause();
-        //     }, duration * 1000); // Convert seconds to milliseconds
-        // }
-
-        // // Call the function with dynamic settings
-        // window.onload = function() {
-        //     // Example: Play audio.mp3 for 60 seconds
-        //     playAudioWithSettings("{{ asset('quiz/audio/clock.aac') }}", 60);
-        // };
     </script>
 @endpush

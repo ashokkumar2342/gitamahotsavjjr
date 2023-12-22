@@ -17,7 +17,8 @@ Route::group(['middleware' => 'admin'], function() {
 	Route::get('send-question', 'DashboardController@sendQuestion')->name('admin.send.question');
 	Route::get('show-answer', 'DashboardController@showAnswer')->name('admin.show.answer');
 	Route::get('show-score-board', 'DashboardController@showScoreBoard')->name('admin.show.score.board');
-	Route::get('start-exam/{max_time?}', 'DashboardController@startexam')->name('admin.start.exam');
+	Route::get('send-next-question', 'DashboardController@sendNextQuestion')->name('admin.send.next.question');
+	Route::get('start-exam', 'DashboardController@startexam')->name('admin.start.exam');
 	Route::get('review-exam', 'DashboardController@reviewexam')->name('admin.review.exam');
 	Route::post('answer-store', 'DashboardController@answerStore')->name('admin.student.answer.store');
 
